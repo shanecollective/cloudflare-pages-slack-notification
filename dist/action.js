@@ -12768,14 +12768,38 @@ var ghDeployment;
 var markedAsInProgress = false;
 async function run() {
   var _a2, _b, _c;
-  const accountEmail = core.getInput("accountEmail", { required: false, trimWhitespace: true });
-  const apiKey = core.getInput("apiKey", { required: false, trimWhitespace: true });
-  const apiToken = core.getInput("apiToken", { required: false, trimWhitespace: true });
-  const accountId = core.getInput("accountId", { required: true, trimWhitespace: true });
-  const project = core.getInput("project", { required: true, trimWhitespace: true });
-  const token = core.getInput("githubToken", { required: false, trimWhitespace: true });
-  const commitHash = core.getInput("commitHash", { required: false, trimWhitespace: true });
-  const slackWebHook = core.getInput("slackWebHook", { required: false, trimWhitespace: true });
+  const accountEmail = core.getInput("accountEmail", {
+    required: false,
+    trimWhitespace: true
+  });
+  const apiKey = core.getInput("apiKey", {
+    required: false,
+    trimWhitespace: true
+  });
+  const apiToken = core.getInput("apiToken", {
+    required: false,
+    trimWhitespace: true
+  });
+  const accountId = core.getInput("accountId", {
+    required: true,
+    trimWhitespace: true
+  });
+  const project = core.getInput("project", {
+    required: true,
+    trimWhitespace: true
+  });
+  const token = core.getInput("githubToken", {
+    required: false,
+    trimWhitespace: true
+  });
+  const commitHash = core.getInput("commitHash", {
+    required: false,
+    trimWhitespace: true
+  });
+  const slackWebHook = core.getInput("slackWebHook", {
+    required: false,
+    trimWhitespace: true
+  });
   const slack = esm_default(slackWebHook);
   const commitUrl = ((_b = (_a2 = import_utils.context.payload) == null ? void 0 : _a2.head_commit) == null ? void 0 : _b.url) || "";
   const actor = ((_c = import_utils.context) == null ? void 0 : _c.actor) || "";
@@ -12861,20 +12885,15 @@ Deployment Logs: ${logs}
       waiting = false;
       const aliasUrl = deployment.aliases && deployment.aliases.length > 0 ? deployment.aliases[0] : deployment.url;
       core.setOutput("id", deployment.id);
-      core.setOutput("environment", deployment.environment);
-      core.setOutput("url", deployment.url);
       core.setOutput("alias", aliasUrl);
       core.setOutput("success", deployment.latest_stage.status === "success" ? true : false);
       if (deployment.latest_stage.status === "success" && true) {
         slack.send(`:white_check_mark: CloudFlare Pages \`Deployment\` pipeline for project *${project}* \`SUCCEEDED\`!
-Environment: *${deployment.environment}*
-Commit: ${commitUrl}
+Environment: *${deployment.environment}
 Actor: *${actor}*
-Deployment ID: *${deployment.id}*
 Alias URL: ${aliasUrl}
-Deployment URL: ${deployment.url}
-Checkout <https://dash.cloudflare.com?to=/${accountId}/pages/view/${deployment.project_name}/${deployment.id}|build logs>`).then(() => {
-          console.log("Slack message for DEPLOYMENT succedded pipeline sent!");
+Build includes: *${deployment.deployment_trigger.metadata.commit_message}*`).then(() => {
+          console.log("Slack message for DEPLOYMENT succeeded pipeline sent!");
         }).catch((err) => {
           console.error(err);
         });
